@@ -12,7 +12,7 @@ EXEC  := main
 optimise: neurons.obj cost.obj main.obj
 		g++ $(BIN)/neurons.obj $(BIN)/cost.obj $(BIN)/main.obj -o main $(CPP_OPTIMISE_FLAGS)
 
-neurons.obj: $(INCLUDE)/neurons.cpp $(INCLUDE)/neurons.hpp
+neurons.obj: $(INCLUDE)/neurons.cpp $(INCLUDE)/neurons.hpp $(INCLUDE)/cost.hpp
 		g++ -c $(INCLUDE)/neurons.cpp -o $(BIN)/neurons.obj $(CPP_OPTIMISE_FLAGS)
 
 cost.obj: $(INCLUDE)/cost.cpp $(INCLUDE)/cost.hpp $(INCLUDE)/neurons.hpp
@@ -30,7 +30,7 @@ main: neurons.o cost.o main.o
 main.o: $(SRC)/main.cpp $(INCLUDE)/neurons.hpp $(INCLUDE)/cost.hpp
 		g++ -c $(SRC)/main.cpp -o $(BIN)/main.o $(CPP_DEBUG_FLAGS)
 
-neurons.o: $(INCLUDE)/neurons.cpp $(INCLUDE)/neurons.hpp
+neurons.o: $(INCLUDE)/neurons.cpp $(INCLUDE)/neurons.hpp $(INCLUDE)/cost.hpp
 		g++ -c $(INCLUDE)/neurons.cpp -o $(BIN)/neurons.o $(CPP_DEBUG_FLAGS)
 
 cost.o: $(INCLUDE)/cost.cpp $(INCLUDE)/cost.hpp $(INCLUDE)/neurons.hpp

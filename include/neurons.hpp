@@ -52,6 +52,8 @@ public:
     ~network();
     void show();
     void init();
+    void calc(int); //Calculate the new neurons' values from given input on the first layer
+    void input(const double *);
 };
 
 #endif // !NEURONS_H

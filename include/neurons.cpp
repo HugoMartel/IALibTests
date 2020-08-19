@@ -1,7 +1,11 @@
 #include "neurons.hpp"
+#include "cost.hpp"
 #include <iostream>
 #include <cstdlib>
 using namespace std;
+
+#define SIGMOID_TO_USE 1 //ReLU
+//#define SIGMOID_TO_USE 2 //Sigmoid
 
 // --------- NEURONS ---------
 neuron::neuron(int previousNeurons = 1, double b = 0)
@@ -153,4 +157,53 @@ void network::init()
             }
         }
     }
+}
+
+// σ(Wa + b)
+void network::calc(int functionToUse = SIGMOID_TO_USE)
+{
+    int tmp;
+    //for each layer after the first one
+    for (int l = 1; l < layerAmount; l++)
+    {
+        //for each neuron of the l layer
+        for (int n = 0; n < neuronAmountPerLayer[l]; n++)
+        {
+            tmp = 0; //Stores the new value of a neuron
+            //for each previous neuron (Wa)
+            for (int p = 0; p < neuronAmountPerLayer[l - 1]; p++)
+            {
+                tmp += layers[l].neurons[n].weight[p] * layers[l - 1].neurons[p].value;
+            }
+            // Add the bias (Wa + b)
+            tmp += layers[l].neurons[n].bias;
+            //Squish the value between 0 and 1 σ(Wa + b)
+            switch (functionToUse)
+            {
+            case 1:
+                //ReLU
+                tmp = ReLU(tmp);
+                break;
+            case 2:
+                //Sigmoid
+                tmp = sigmoid(tmp);
+                break;
+
+            default:
+                break;
+            }
+            //Now do it again for each neuron of the layer
+        }
+        //Now do it again for each layer of the network
+    }
+    if (debug)
+        cout << "--Neurons values successfully updated--";
+}
+
+void network::input(const double * inputs) {
+    //Copy the values into the first layer's neurons' values
+    for (int n = 0; n < neuronAmountPerLayer[0]; n++)
+        layers[0].neurons[n].value = inputs[n];
+    if (debug)
+        cout << "--Inputs successfully inserted--";
 }
